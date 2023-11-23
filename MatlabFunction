@@ -1,0 +1,93 @@
+package sceua;
+
+import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
+
+import java.util.Arrays;
+import java.util.Comparator;
+
+public class MatlabFunction {
+    public double[] matlabStd(double[][] dataIn){
+
+        double[] columnStdDevs = new double[dataIn[0].length];
+
+        for (int col = 0; col < dataIn[0].length; col++) {
+            double[] colValue = new double[dataIn.length];
+            for (int row = 0; row < dataIn.length; row++) {
+                colValue[row] = dataIn[row][col];
+            }
+            // mean
+            double sum = 0.0;
+            for (double value : colValue) {
+                sum = sum + value;
+            }
+            double mean = sum / colValue.length;
+            // 计算差值的平方和
+            double sumSquaredDiff = 0.0;
+            for (double value : colValue) {
+                double diff = value - mean;
+                sumSquaredDiff = sumSquaredDiff + diff * diff;
+            }
+            // 计算方差
+            double variance = sumSquaredDiff / (colValue.length - 1);
+            // 计算标准差
+            columnStdDevs[col] = Math.sqrt(variance);
+        }
+
+        return columnStdDevs;
+    }
+
+    public double[] matlabMean(double[][] dataIn){
+
+        double[] result = new double[dataIn[0].length];
+        // 遍历每一列
+        for (int col = 0; col < dataIn[0].length; col++) {
+            double sum = 0;
+            // 遍历前 n-1 行
+            for (int row = 0; row < dataIn.length; row++) {
+                sum += dataIn[row][col];
+            }
+            // 计算平均值，存储在 ce 数组中
+            result[col] = sum / dataIn.length;
+        }
+
+        return result;
+    }
+
+    public void matlabSort(double[] dataIn, Integer[] idx){
+
+        // 使用 dataIn 对 idx 进行排序
+        Arrays.sort(idx, new Comparator<Integer>() {
+            @Override
+            public int compare(final Integer o1, final Integer o2) {
+                return Double.compare(dataIn[o1], dataIn[o2]);
+            }
+        });
+
+        // 新数组排序
+        Arrays.sort(dataIn);
+    }
+
+
+    public static void main(String[] args) {
+
+        double[][] array = {
+                {1.0, 2.0, 3.0, 4.0},
+                {5.0, 6.0, 7.0, 8.0},
+                {9.0, 10.0, 11.0, 12.0},
+                {13.0, 14.0, 15.0, 16.0},
+                {17.0, 18.0, 19.0, 20.0},
+                {25, 67, 11, 88},
+                {25.0, 26.0, 27.0, 28.0},
+                {29.0, 30.0, 31.0, 32.0}
+        };
+
+        MatlabFunction matf = new MatlabFunction();
+
+        double[] aaa = matf.matlabMean(array);
+
+        System.out.println(Arrays.toString(aaa));
+
+    }
+
+
+}
